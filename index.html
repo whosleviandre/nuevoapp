@@ -1,9 +1,45 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}
-{{super() }} HOME
-{% endblock %}
+{% block title %}Weather App{% endblock %}
 
-{% block content%}
-
+{% block content %}
+    <div class="container">
+        <h1 class="mt-4 mb-4">Weather App</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="content-wrapper">
+                    <form method="POST">
+                        <img src="{{ url_for('static', filename='rain.ico') }}" width="200px" class="p-3 mb-2"> 
+                        <h4>Consulta el clima</h4>
+                        <div class="form-group">
+                            <input type="text" name="txtciudad" class="form-control" placeholder="Ciudad a buscar" aria-label="Ciudad a buscar" required> 
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-warning">Buscar</button>
+                        <button type="reset" class="btn btn-danger">Limpiar</button>  
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="content-wrapper">
+                    {% if context %}
+                        <center>
+                            <img src="http://openweathermap.org/img/w/{{ context['weather'][0]['icon'] }}.png" alt="..." width="100">
+                            <h5>{{ context['name'] }}</h5>
+                            <p>Latitud: {{ context['coord']['lat'] }}</p>
+                            <p>Longitud: {{ context['coord']['lon'] }}</p>
+                            <p>Temperatura: {{ (context['main']['temp'] - 273.15) | round(2) }} &deg;C</p>
+                            <p>Humedad: {{ context['main']['humidity'] }}%</p>
+                            <p>Descripción: {{ context['weather'][0]['description'] | capitalize }}</p>
+                        </center>
+                    {% elif error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <img src="{{ city_image_url }}" alt="Weather Image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
